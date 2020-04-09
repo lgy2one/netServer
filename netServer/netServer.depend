@@ -1,0 +1,212 @@
+# depslib dependency file v1.0
+1583999728 source:/home/lgy2one/codeblocks_project/netServer/Channel.cpp
+	"Channel.h"
+	<iostream>
+	<sys/epoll.h>
+
+1584001032 /home/lgy2one/codeblocks_project/netServer/Channel.h
+	<functional>
+
+1584087102 source:/home/lgy2one/codeblocks_project/netServer/EchoServer.cpp
+	"EchoServer.h"
+	<iostream>
+	<functional>
+
+1586105301 /home/lgy2one/codeblocks_project/netServer/EchoServer.h
+	<string>
+	"TcpServer.h"
+	"EventLoop.h"
+	"TcpConnection.h"
+	"Timer.h"
+
+1584086526 /home/lgy2one/codeblocks_project/netServer/TcpServer.h
+	<functional>
+	<string>
+	<map>
+	<mutex>
+	"Socket.h"
+	"Channel.h"
+	"EventLoop.h"
+	"TcpConnection.h"
+	"EventLoopThreadPool.h"
+
+1583980716 /home/lgy2one/codeblocks_project/netServer/Socket.h
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+
+1585452001 /home/lgy2one/codeblocks_project/netServer/EventLoop.h
+	<iostream>
+	<functional>
+	<vector>
+	<thread>
+	<mutex>
+	"Poller.h"
+	"Channel.h"
+
+1584001606 /home/lgy2one/codeblocks_project/netServer/Poller.h
+	<vector>
+	<mutex>
+	<map>
+	<sys/epoll.h>
+	"Channel.h"
+
+1586105491 /home/lgy2one/codeblocks_project/netServer/TcpConnection.h
+	<functional>
+	<string>
+	<sys/types.h>
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<thread>
+	<memory>
+	"Channel.h"
+	"EventLoop.h"
+
+1586105347 /home/lgy2one/codeblocks_project/netServer/EventLoopThreadPool.h
+	<iostream>
+	<vector>
+	<string>
+	"EventLoop.h"
+	"EventLoopThread.h"
+
+1585451969 /home/lgy2one/codeblocks_project/netServer/EventLoopThread.h
+	<iostream>
+	<string>
+	<thread>
+	"EventLoop.h"
+
+1586105491 /home/lgy2one/codeblocks_project/netServer/Timer.h
+	<functional>
+
+1586104241 source:/home/lgy2one/codeblocks_project/netServer/EventLoop.cpp
+	"EventLoop.h"
+	<iostream>
+	<sys/eventfd.h>
+	<unistd.h>
+	<stdlib.h>
+
+1586104300 source:/home/lgy2one/codeblocks_project/netServer/EventLoopThread.cpp
+	"EventLoopThread.h"
+	<iostream>
+	<sstream>
+
+1585452219 source:/home/lgy2one/codeblocks_project/netServer/EventLoopThreadPool.cpp
+	"EventLoopThreadPool.h"
+
+1586265729 source:/home/lgy2one/codeblocks_project/netServer/main.cpp
+	<signal.h>
+	"EventLoop.h"
+	"HttpServer.h"
+	"EchoServer.h"
+
+1585451934 /home/lgy2one/codeblocks_project/netServer/HttpServer.h
+	<string>
+	<mutex>
+	<map>
+	"EventLoop.h"
+	"TcpServer.h"
+	"TcpConnection.h"
+	"HttpSession.h"
+	"ThreadPool.h"
+	"Timer.h"
+
+1586105372 /home/lgy2one/codeblocks_project/netServer/HttpSession.h
+	<string>
+	<sstream>
+	<map>
+
+1585451850 /home/lgy2one/codeblocks_project/netServer/ThreadPool.h
+	<iostream>
+	<vector>
+	<string>
+	<sstream>
+	<queue>
+	<mutex>
+	<thread>
+	<condition_variable>
+	<functional>
+
+1586104521 source:/home/lgy2one/codeblocks_project/netServer/Poller.cpp
+	"Poller.h"
+	<iostream>
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<errno.h>
+
+1583997204 source:/home/lgy2one/codeblocks_project/netServer/Socket.cpp
+	"Socket.h"
+	<iostream>
+	<stdio.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<errno.h>
+	<stdlib.h>
+	<cstring>
+
+1586104674 source:/home/lgy2one/codeblocks_project/netServer/TcpConnection.cpp
+	"TcpConnection.h"
+	<stdio.h>
+	<iostream>
+	<sys/types.h>
+	<sys/socket.h>
+	<errno.h>
+	<unistd.h>
+
+1586105106 source:/home/lgy2one/codeblocks_project/netServer/TcpServer.cpp
+	"TcpServer.h"
+	<iostream>
+	<stdio.h>
+	<unistd.h>
+	<fcntl.h>
+	<stdlib.h>
+	<sys/epoll.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<memory>
+
+1586105137 source:/home/lgy2one/codeblocks_project/netServer/ThreadPool.cpp
+	"ThreadPool.h"
+	<deque>
+	<unistd.h>
+
+1586105178 source:/home/lgy2one/codeblocks_project/netServer/Timer.cpp
+	"Timer.h"
+	<sys/time.h>
+	"TimerManager.h"
+
+1586105487 /home/lgy2one/codeblocks_project/netServer/TimerManager.h
+	<functional>
+	<mutex>
+	<condition_variable>
+	<vector>
+	<thread>
+	"Timer.h"
+
+1586105244 source:/home/lgy2one/codeblocks_project/netServer/TimerManager.cpp
+	"TimerManager.h"
+	<iostream>
+	<thread>
+	<ctime>
+	<ratio>
+	<chrono>
+	<unistd.h>
+	<sys/time.h>
+
+1586104368 source:/home/lgy2one/codeblocks_project/netServer/HttpServer.cpp
+	"HttpServer.h"
+	<iostream>
+	<functional>
+	<memory>
+	"TimerManager.h"
+
+1586263114 source:/home/lgy2one/codeblocks_project/netServer/HttpSession.cpp
+	"HttpSession.h"
+	<iostream>
+	<fstream>
+	<stdio.h>
+	<string.h>
+

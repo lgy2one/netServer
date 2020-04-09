@@ -1,0 +1,69 @@
+h2 {	margin:50px auto;
+		font-size:40px;
+		text-align:center;	}
+
+#Out_Frame {	width:1200px;
+				padding-bottom:100px;
+				margin:50px auto;
+				display:flex;
+				align-items:flex-start;	}
+
+.Option {	width:300px;
+			height:600px;
+			padding:50px 50px;
+			margin-right:100px;
+			font-size:15px;
+			background-color:white;
+			box-shadow:0px 2px 6px rgba(0,0,0,0.2);	}
+
+.Option p {	text-align:center;	}
+
+.xo {	width:100%;
+		display:flex;	}
+
+.xo a {	flex-grow:1;	}
+
+#container{	padding:100px 50px 0 50px;
+			text-align:center;
+			width:800px;
+			height:600px;
+			background-color:white;
+			box-shadow:0px 2px 6px rgba(0,0,0,0.2);	}
+
+button {	min-width:100px;
+			min-height:30px;
+			width:150px;
+			height:60px;
+			cursor:pointer;
+			font-size:20px;
+			font-family:ED;
+			border-color:transparent;
+			text-align:center;
+			border-radius:10px;	}
+
+button#restart-game {	margin-top:20px;
+						text-align:center;
+						width:50px;
+						font-size:15px;	}
+
+button:focus{	outline:none;	}
+
+#btn-choose-x {	margin:20px;	}
+#btn-choose-o {	margin:20px;	}
+
+#board {	width:450px;height:450px;
+			border-radius:20px;
+			text-align:center;
+			background-color:rgba(0,0,0,0.2);
+			border:rgba(0,0,0,0.5) solid 10px;	}
+			
+#winner{	width:100%;
+			font-size:30px;
+			margin-bottom:100px;
+			text-align:center;
+			text-align:center;	}
+
+body {	margin:0;
+		padding:0;
+		font-family:ED;
+		background-color:antiquewhite;	}
