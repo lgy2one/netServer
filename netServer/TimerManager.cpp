@@ -17,8 +17,8 @@
 TimerManager*  TimerManager::ptimermanager_ = nullptr;
 std::mutex TimerManager::mutex_;
 TimerManager::GC TimerManager::gc;
-const int TimerManager::slotinterval = 1;
-const int TimerManager::slotnum = 1024;
+const int TimerManager::slotinterval = 1; //槽的时间范围
+const int TimerManager::slotnum = 1024;  //槽的数量
 
 TimerManager::TimerManager(/* args */)
     : currentslot(0),
@@ -34,6 +34,7 @@ TimerManager::~TimerManager()
     Stop();
 }
 
+/*创建定时器管理器，返回该定时器指针*/
 TimerManager* TimerManager::GetTimerManagerInstance()
 {
     if(ptimermanager_ == nullptr) //指针为空，则创建管理器
@@ -47,6 +48,7 @@ TimerManager* TimerManager::GetTimerManagerInstance()
     return ptimermanager_;
 }
 
+/*线程安全下计算定时器的相关参数并将定时器添加到时间轮*/
 void TimerManager::AddTimer(Timer* ptimer)
 {
     if(ptimer == nullptr)
@@ -56,6 +58,7 @@ void TimerManager::AddTimer(Timer* ptimer)
     AddTimerToTimeWheel(ptimer);
 }
 
+/*线程安全下移除定时器*/
 void TimerManager::RemoveTimer(Timer* ptimer)
 {
     if(ptimer == nullptr)
@@ -64,6 +67,7 @@ void TimerManager::RemoveTimer(Timer* ptimer)
     RemoveTimerFromTimeWheel(ptimer);
 }
 
+/*线程安全下修改定时器*/
 void TimerManager::AdjustTimer(Timer* ptimer)
 {
     if(ptimer == nullptr)
@@ -73,27 +77,29 @@ void TimerManager::AdjustTimer(Timer* ptimer)
     AdjustTimerToWheel(ptimer);
 }
 
+/*计算该定时器的相关参数*/
 void TimerManager::CalculateTimer(Timer* ptimer)
 {
     if(ptimer == nullptr)
         return;
 
-    int tick = 0;
+    int tick = 0; //当前超时时间可跨越的槽数量
     int timeout = ptimer->timeout_;
     if(timeout < slotinterval)
     {
-        tick = 1; //不足一个slot间隔，按延迟1slot计算
+        tick = 1; //不足一个slot间隔，按延迟1 slot计算
     }
     else
     {
         tick = timeout / slotinterval;
     }
 
-    ptimer->rotation = tick / slotnum;
-    int timeslot = (currentslot + tick) % slotnum;
+    ptimer->rotation = tick / slotnum;  //剩下的转数
+    int timeslot = (currentslot + tick) % slotnum;//定时器所在的时间槽位置
     ptimer->timeslot = timeslot;
 }
 
+/*添加定时器到定时器链表中，每个不同的槽都有一个定时器链表*/
 void TimerManager::AddTimerToTimeWheel(Timer* ptimer)
 {
     if(ptimer == nullptr)
@@ -113,6 +119,7 @@ void TimerManager::AddTimerToTimeWheel(Timer* ptimer)
     }
 }
 
+/*从定时器链表中移除定时器*/
 void TimerManager::RemoveTimerFromTimeWheel(Timer* ptimer)
 {
     if(ptimer == nullptr)
@@ -142,6 +149,7 @@ void TimerManager::RemoveTimerFromTimeWheel(Timer* ptimer)
     }
 }
 
+/*修改定时器，其实就是先移除再增加*/
 void TimerManager::AdjustTimerToWheel(Timer* ptimer)
 {
     if(ptimer == nullptr)
@@ -151,6 +159,7 @@ void TimerManager::AdjustTimerToWheel(Timer* ptimer)
     CalculateTimer(ptimer);
     AddTimerToTimeWheel(ptimer);
 }
+
 
 void TimerManager::CheckTimer()//执行当前slot的任务
 {
@@ -201,7 +210,7 @@ void TimerManager::CheckTick()
     {
         gettimeofday(&tv, NULL);
         time = (tv.tv_sec % 10000) * 1000 + tv.tv_usec / 1000;
-        tickcount = (time - oldtime)/slotinterval; //计算两次check的时间间隔占多少个slot
+        tickcount = (time - oldtime) / slotinterval; //计算两次check的时间间隔占多少个slot
         //oldtime = time;
         oldtime = oldtime + tickcount*slotinterval;
 

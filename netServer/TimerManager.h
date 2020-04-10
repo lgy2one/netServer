@@ -59,7 +59,7 @@ private:
     static GC gc;
 
     //时间轮相关成员
-    //当前slot
+    //当前槽
     int currentslot;
 
     //每个slot的时间间隔,ms

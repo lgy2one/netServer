@@ -22,7 +22,7 @@ public:
     typedef enum
     {
         TIMER_ONCE = 0, //一次触发型
-        TIMER_PERIOD //周期触发型
+        TIMER_PERIOD    //周期触发型
     }TimerType;
 
     //超时时间,单位ms
