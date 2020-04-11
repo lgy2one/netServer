@@ -42,36 +42,37 @@ HttpSession::~HttpSession()
 
 }
 
+/*解析报文，并把内容存进请求报文的结构体里*/
 bool HttpSession::PraseHttpRequest(std::string &msg, HttpRequestContext &httprequestcontext)
 {
-    //std::cout << "HttpServer::HttpParser" << std::endl;
+
 	std::string crlf("\r\n"), crlfcrlf("\r\n\r\n");
-	size_t prev = 0, next = 0, pos_colon;
+	size_t prev = 0, next = 0;  //size_t用来表示数组下标
 	std::string key, value;
 
     bool praseresult = false;
-    //以下解析可以改成状态机，解决一次收Http报文不完整问题
-	//prase http request line
+
+	//解析HTTP请求行
 	if ((next = msg.find(crlf, prev)) != std::string::npos)
 	{
 		std::string first_line(msg.substr(prev, next - prev));
 		prev = next;
 		std::stringstream sstream(first_line);
-		sstream >> (httprequestcontext.method);
+		sstream >> (httprequestcontext.method);  //以空格为分隔符
 		sstream >> (httprequestcontext.url);
 		sstream >> (httprequestcontext.version);
 	}
 	else
 	{
-        std::cout << "msg" << msg << std::endl;
+        std::cout << "msg:" << msg << std::endl;
 		std::cout << "Error in httpPraser: http_request_line isn't complete!" << std::endl;
         praseresult = false;
         msg.clear();
         return praseresult;
-        //可以临时存起来，凑齐了再解析
 	}
-    //prase http request header
-	size_t pos_crlfcrlf = 0;
+
+    //解析HTTP头部
+	size_t pos_crlfcrlf = 0, pos_colon;
 	if (( pos_crlfcrlf = msg.find(crlfcrlf, prev)) != std::string::npos)
 	{
 		while (prev != pos_crlfcrlf)
@@ -91,13 +92,15 @@ bool HttpSession::PraseHttpRequest(std::string &msg, HttpRequestContext &httpreq
         msg.clear();
         return praseresult;
     }
-    //prase http request body
+
+    //解析HTTP主体
 	httprequestcontext.body = msg.substr(pos_crlfcrlf + 4);
     praseresult = true;
     msg.clear();
     return praseresult;
 }
 
+/*处理报文，实现GET方法*/
 void HttpSession::HttpProcess(const HttpRequestContext &httprequestcontext, std::string &responsecontext)
 {
     std::string responsebody;
@@ -109,10 +112,12 @@ void HttpSession::HttpProcess(const HttpRequestContext &httprequestcontext, std:
     if("GET" == httprequestcontext.method)
     {
         ;
+        //下面的处理即是get方法的处理，此处未放在判断中
     }
     else if("POST" == httprequestcontext.method)
     {
         ;
+        //未实现
     }
     else
     {
@@ -125,8 +130,8 @@ void HttpSession::HttpProcess(const HttpRequestContext &httprequestcontext, std:
     size_t pos = httprequestcontext.url.find("?");
     if(pos != std::string::npos)
     {
-        path = httprequestcontext.url.substr(0, pos);
-        querystring = httprequestcontext.url.substr(pos+1);
+        path = httprequestcontext.url.substr(0, pos);   //得到路径
+        querystring = httprequestcontext.url.substr(pos+1);//得到需要查询的子串，无相应处理
     }
     else
     {
@@ -175,6 +180,7 @@ void HttpSession::HttpProcess(const HttpRequestContext &httprequestcontext, std:
     }
     else
     {
+        //判断文件类型
         int strSize = path.size();
         for(int i = 0; i < strSize;i++){
             if(path.at(i) == '.'){
@@ -184,6 +190,7 @@ void HttpSession::HttpProcess(const HttpRequestContext &httprequestcontext, std:
         }
     }
 
+    //读取资源并存在responsecontext回送
     path.insert(0,".");
     std::ifstream fp(path);
     if(fp.fail())
@@ -206,13 +213,14 @@ void HttpSession::HttpProcess(const HttpRequestContext &httprequestcontext, std:
         fp.close();
     }
 
-    /*Only supported js,css,html currently 3.5*/
+    /*Only supported js,css,html currently (date 3.5)*/
     if(filetype == "js"){
         filetype = "text/JavaScript";
     }
     else{
         filetype.insert(0,"text/");
     }
+
 
     responsecontext += httprequestcontext.version + " 200 OK\r\n";
     responsecontext += "Server: Li GuoYan's NetServer/0.1\r\n";
@@ -226,6 +234,7 @@ void HttpSession::HttpProcess(const HttpRequestContext &httprequestcontext, std:
     responsecontext += responsebody;
 }
 
+/*出错处理*/
 void HttpSession::HttpError(const int err_num, const std::string short_msg, const HttpRequestContext &httprequestcontext, std::string &responsecontext)
 {
     //这里string创建销毁应该会耗时间

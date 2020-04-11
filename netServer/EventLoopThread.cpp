@@ -31,7 +31,6 @@ EventLoop* EventLoopThread::GetLoop()
 }
 void EventLoopThread::Start()
 {
-    //create thread
     th_ = std::thread(&EventLoopThread::ThreadFunc, this);
 }
 

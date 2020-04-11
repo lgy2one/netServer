@@ -49,17 +49,14 @@ TcpConnection::~TcpConnection()
 void TcpConnection::AddChannelToLoop()
 {
 	//多线程下，加入loop的任务队列
-	//主线程直接执行
-    //loop_->AddChannelToPoller(pchannel_);
 	loop_->AddTask(std::bind(&EventLoop::AddChannelToPoller, loop_, spchannel_.get()));
-
 }
 
 void TcpConnection::Send(const std::string &s)
 {
-	//std::cout << "TcpConnection::Send" << std::endl;
 	bufferout_ += s; //跨线程消息投递成功
-	//判断当前线程是不是Loop IO线程
+	//判断当前线程是不是Loop IO线程，若不是，即切换线程
+	//即经过工作线程处理解析或计算之后重新回调到本IO线程
 	if(loop_->GetThreadId() == std::this_thread::get_id())
 	{
 		SendInLoop();
@@ -67,7 +64,6 @@ void TcpConnection::Send(const std::string &s)
 	else
 	{
 		asyncprocessing_ = false; //异步调用结束
-		//std::cout << "asyncprocessing_" << std::endl;
 		loop_->AddTask(std::bind(&TcpConnection::SendInLoop, shared_from_this()));//跨线程调用,加入IO线程的任务队列，唤醒
 	}
 }
@@ -140,7 +136,6 @@ void TcpConnection::HandleRead()
     if(result > 0)
     {
         messagecallback_(shared_from_this(), bufferin_);//可以用右值引用优化
-		//bufferin_.clear();
     }
     else if(result == 0)
     {

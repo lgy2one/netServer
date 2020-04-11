@@ -33,7 +33,6 @@ TcpServer::TcpServer(EventLoop* loop, const int port, const int threadnum)
     serverchannel_.SetFd(serversocket_.fd());//OnNewConnection包含接受套接字的accept函数
     serverchannel_.SetReadHandle(std::bind(&TcpServer::OnNewConnection, this));
     serverchannel_.SetErrorHandle(std::bind(&TcpServer::OnConnectionError, this));
-
 }
 
 TcpServer::~TcpServer()
@@ -49,7 +48,7 @@ void TcpServer::Start()
     loop_->AddChannelToPoller(&serverchannel_);
 }
 
-//新TCP连接处理，核心功能，业务功能注册，任务分发
+/*新TCP连接处理，核心功能，业务功能注册，任务分发*/
 void TcpServer::OnNewConnection()
 {
     //循环调用accept，获取所有的建立好连接的客户端fd
@@ -67,10 +66,10 @@ void TcpServer::OnNewConnection()
         }
         Setnonblocking(clientfd);//设置客户端为非阻塞
 
-        //选择IO线程loop
+        //轮询调度选择IO线程loop
         EventLoop *loop = eventloopthreadpool.GetNextLoop();
 
-        //创建连接，注册业务函数
+        //创建连接，注册业务函数，当连接有读写等操作时，皆回调到此处，再回调到http的读写函数
         std::shared_ptr<TcpConnection> sptcpconnection = std::make_shared<TcpConnection>(loop, clientfd, clientaddr);
         sptcpconnection->SetMessaeCallback(messagecallback_);
         sptcpconnection->SetSendCompleteCallback(sendcompletecallback_);
@@ -79,13 +78,12 @@ void TcpServer::OnNewConnection()
         sptcpconnection->SetConnectionCleanUp(std::bind(&TcpServer::RemoveConnection, this, std::placeholders::_1));
         {
             std::lock_guard<std::mutex> lock(mutex_);
-            tcpconnlist_[clientfd] = sptcpconnection; //将多个客户端连接保存
+            tcpconnlist_[clientfd] = sptcpconnection; //线程安全下将多个客户端连接保存
         }
 
+        newconnectioncallback_(sptcpconnection);//即回调到HTTP的HandleNewConnection，处理新连接
 
-        newconnectioncallback_(sptcpconnection);
-
-        //做好一切准备工作再添加事件到epoll！！！
+        //做好一切准备工作后添加事件到epoll
         sptcpconnection->AddChannelToLoop();
     }
 }

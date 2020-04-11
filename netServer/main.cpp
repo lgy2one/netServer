@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
     HttpServer httpserver(&loop, port, iothreadnum, workerthreadnum);
     httpserver.Start();
 
-    /*EchoServer is used to test TCPserver
+    /*EchoServer is used to test TCPserver*/
+    /*
     EchoServer echoserver(&loop, port, iothreadnum);
     echoserver.Start();
     */

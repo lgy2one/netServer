@@ -77,11 +77,9 @@ public:
     {
         {
             std::lock_guard <std::mutex> lock(mutex_);
-            //std::cout << "push_back done" << std::endl;
             functorlist_.push_back(functor);
 
         }
-        //std::cout << "WakeUp" << std::endl;
         WakeUp();//跨线程唤醒，worker线程唤醒IO线程
     }
 
